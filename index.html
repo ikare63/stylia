@@ -125,6 +125,21 @@ body{overflow-x:hidden}
 .hero-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.18em;font-weight:850;color:#eee}
 .hero-title{font-size:38px;line-height:.98;letter-spacing:-1.7px;margin:8px 0 0;font-weight:950;max-width:510px}
 .hero-title span{color:var(--yellow)}
+.hero-strike{
+  position:relative;
+  display:inline-block;
+  color:#fff !important;
+}
+.hero-strike:after{
+  content:"";
+  position:absolute;
+  left:-1px; right:-1px;
+  top:52%;
+  height:8px;
+  background:rgba(244,0,99,.95);
+  transform:rotate(-7deg);
+  border-radius:999px;
+}
 .hero-note{
   position:absolute;right:18px;top:18px;
   font-family:"Comic Sans MS","Bradley Hand",cursive;
@@ -133,14 +148,7 @@ body{overflow-x:hidden}
   font-size:16px;line-height:1.05;
   max-width:150px;
 }
-.hero-note:after{
-  content:"";
-  display:block;
-  width:90px;height:5px;
-  margin:7px 0 0 auto;
-  background:var(--yellow);
-  transform:rotate(-4deg);
-}
+.hero-note:after{display:none}
 .stepper{
   display:grid;
   grid-template-columns:repeat(4,1fr);
@@ -336,26 +344,57 @@ body{overflow-x:hidden}
 }
 .summer .part-dot{border-color:rgba(0,0,0,.18)}
 .mini-person{
-  height:280px;position:relative;
+  height:300px;position:relative;
   display:flex;justify-content:center;align-items:flex-start;
 }
 .figure{
-  width:145px;height:270px;position:relative;margin-top:6px;
-  filter:drop-shadow(0 12px 8px rgba(0,0,0,.13));
+  width:168px;height:290px;position:relative;margin-top:2px;
+  filter:drop-shadow(0 14px 10px rgba(0,0,0,.16));
 }
-.fig-head{position:absolute;left:54px;top:0;width:37px;height:43px;background:#d7ae8c;border-radius:46%}
-.fig-neck{position:absolute;left:66px;top:38px;width:14px;height:18px;background:#d7ae8c}
-.fig-arm{position:absolute;top:63px;width:18px;height:105px;background:#d7ae8c;border-radius:12px;z-index:1}
-.fig-arm.l{left:27px;transform:rotate(7deg)} .fig-arm.r{right:27px;transform:rotate(-7deg)}
-.fig-top{position:absolute;left:39px;top:54px;width:68px;height:98px;border-radius:18px 18px 10px 10px;z-index:2;border:1px solid rgba(0,0,0,.08)}
-.fig-bottom{position:absolute;left:38px;top:143px;width:70px;height:58px;border-radius:8px 8px 14px 14px;z-index:3;border:1px solid rgba(0,0,0,.08)}
-.fig-leg{position:absolute;top:192px;width:22px;height:57px;background:#d7ae8c;border-radius:8px}
-.fig-leg.l{left:48px}.fig-leg.r{right:48px}
-.fig-shoe{position:absolute;top:239px;width:38px;height:18px;border-radius:12px 12px 6px 6px;border:1px solid rgba(0,0,0,.15)}
-.fig-shoe.l{left:32px}.fig-shoe.r{right:32px}
+.fig-head{
+  position:absolute;left:64px;top:0;width:40px;height:46px;
+  background:#d7ae8c;border-radius:46% 46% 44% 44%;
+  z-index:4;
+}
+.fig-neck{
+  position:absolute;left:78px;top:40px;width:12px;height:18px;
+  background:#d7ae8c;border-radius:0 0 6px 6px;z-index:3;
+}
+.fig-arm{
+  position:absolute;top:70px;width:20px;height:106px;
+  background:#d7ae8c;border-radius:12px;z-index:1
+}
+.fig-arm.l{left:28px;transform:rotate(8deg)}
+.fig-arm.r{right:28px;transform:rotate(-8deg)}
+.fig-top{
+  position:absolute;left:50px;top:54px;width:68px;height:98px;
+  border-radius:18px 18px 12px 12px;z-index:3;
+  border:1px solid rgba(0,0,0,.08);
+  overflow:hidden;
+}
+.fig-bottom{
+  position:absolute;left:44px;top:144px;width:80px;height:64px;
+  border-radius:10px 10px 16px 16px;z-index:3;
+  border:1px solid rgba(0,0,0,.08)
+}
+.fig-bottom.short{
+  height:56px;
+}
+.fig-leg{
+  position:absolute;top:201px;width:22px;height:58px;
+  background:#d7ae8c;border-radius:10px
+}
+.fig-leg.l{left:56px}
+.fig-leg.r{right:56px}
+.fig-shoe{
+  position:absolute;top:252px;width:38px;height:16px;
+  border-radius:12px 12px 7px 7px;border:1px solid rgba(0,0,0,.15)
+}
+.fig-shoe.l{left:41px}
+.fig-shoe.r{right:41px}
 .fig-umbrella{
-  position:absolute;right:-12px;top:74px;width:46px;height:46px;
-  color:#111;background:rgba(255,255,255,.82);border-radius:50%;
+  position:absolute;right:-8px;top:78px;width:46px;height:46px;
+  color:#111;background:rgba(255,255,255,.84);border-radius:50%;
   display:grid;place-items:center;z-index:6;
   box-shadow:0 5px 14px rgba(0,0,0,.12)
 }
@@ -524,7 +563,7 @@ body{overflow-x:hidden}
     <section id="quizView">
       <div class="hero-stripes">
         <div class="hero-kicker">Ton style · Tes couleurs</div>
-        <h1 class="hero-title">Compose une tenue qui <span>match</span>.</h1>
+        <h1 class="hero-title">Compose une <span class="hero-strike">tenue qui</span> <span>match</span>.</h1>
         <div class="hero-note">Des looks<br>qui te ressemblent</div>
       </div>
 
@@ -843,6 +882,66 @@ const $=id=>document.getElementById(id);
 function familyOfShade(s){return Object.keys(families).find(f=>Object.keys(families[f]).includes(s))}
 function shadeHex(s){const f=familyOfShade(s);return f?families[f][s]:'#eee'}
 function pieceById(id){return pieces.find(p=>p.id===id)}
+
+function withAgreement(item){
+  if(!item) return '';
+  const piece=item.piece || '';
+  const shade=(item.shade || '').toLowerCase();
+
+  const femininePieces=['Chemise','Surchemise','Veste'];
+  const masculinePluralPieces=['Baskets','Mocassins','Sandales'];
+  const feminineShades={
+    'blanc':'blanche',
+    'noir':'noire',
+    'gris':'grise',
+    'bleu marine':'bleu marine',
+    'bleu ciel':'bleu ciel',
+    'bleu roi':'bleu roi',
+    'bleu pétrole':'bleu pétrole',
+    'écru':'écrue',
+    'kaki':'kaki',
+    'bordeaux':'bordeaux',
+    'moutarde':'moutarde',
+    'ocre':'ocre',
+    'jaune pâle':'jaune pâle',
+    'doré':'dorée',
+    'citron':'citron',
+    'lin':'lin',
+    'sable':'sable',
+    'taupe':'taupe',
+    'camel':'camel',
+    'cognac':'cognac',
+    'chocolat':'chocolat',
+    'noisette':'noisette',
+    'prune':'prune',
+    'lavande':'lavande',
+    'lilas':'lilas',
+    'saumon':'saumon',
+    'rose poudré':'rose poudré',
+    'vieux rose':'vieux rose',
+    'fuchsia':'fuchsia',
+    'olive':'olive',
+    'forêt':'forêt',
+    'sauge':'sauge',
+    'menthe':'menthe',
+    'orange':'orange',
+    'terracotta':'terracotta',
+    'rouille':'rouille',
+    'corail':'corail'
+  };
+  const pluralShades={
+    'blanc':'blanches',
+    'noir':'noires',
+    'gris':'grises',
+    'écru':'écrues',
+    'doré':'dorées'
+  };
+
+  let agreed=shade;
+  if(femininePieces.includes(piece)) agreed=feminineShades[shade] || shade;
+  if(masculinePluralPieces.includes(piece)) agreed=pluralShades[shade] || shade;
+  return `${piece} ${agreed}`;
+}
 function pick(fam,idx=0){const a=preferred[fam]||Object.keys(families[fam]||{});return a[idx]||a[0]}
 function toast(t){$('toast').textContent=t;$('toast').classList.add('show');setTimeout(()=>$('toast').classList.remove('show'),1500)}
 
@@ -1026,17 +1125,29 @@ function buildLooks(){
  return looks;
 }
 function figureHTML(look){
+ const isShort=look.bottom && look.bottom.piece==='Short';
+ const topStyle=`background:${look.top?shadeHex(look.top.shade):'#eee'};${look.outer?`box-shadow:inset 9px 0 0 ${shadeHex(look.outer.shade)},inset -9px 0 0 ${shadeHex(look.outer.shade)}`:''}`;
  return `<div class="figure">
-   <div class="fig-head"></div><div class="fig-neck"></div>
-   <div class="fig-arm l"></div><div class="fig-arm r"></div>
-   <div class="fig-top" style="background:${look.top?shadeHex(look.top.shade):'#eee'};${look.outer?`box-shadow:inset 9px 0 0 ${shadeHex(look.outer.shade)},inset -9px 0 0 ${shadeHex(look.outer.shade)}`:''}"></div>
-   <div class="fig-bottom" style="background:${look.bottom?shadeHex(look.bottom.shade):'#ddd'}"></div>
-   <div class="fig-leg l"></div><div class="fig-leg r"></div>
+   <div class="fig-head"></div>
+   <div class="fig-neck"></div>
+   <div class="fig-arm l"></div>
+   <div class="fig-arm r"></div>
+   <div class="fig-top" style="${topStyle}"></div>
+   <div class="fig-bottom ${isShort?'short':''}" style="background:${look.bottom?shadeHex(look.bottom.shade):'#ddd'}"></div>
+   <div class="fig-leg l"></div>
+   <div class="fig-leg r"></div>
    <div class="fig-shoe l" style="background:${look.shoes?shadeHex(look.shoes.shade):'#fff'}"></div>
    <div class="fig-shoe r" style="background:${look.shoes?shadeHex(look.shoes.shade):'#fff'}"></div>
    ${look.accessory?`<div class="fig-umbrella">${garmentIcon('umbrella')}</div>`:''}
  </div>`;
 }
+function lookLabelTwoLines(item){
+  const full=withAgreement(item);
+  const idx=full.lastIndexOf(' ');
+  if(idx===-1) return full;
+  return `${full.slice(0, idx)}<br>${full.slice(idx+1)}`;
+}
+
 function renderLookCarousel(){
  $('lookCarousel').innerHTML='';
  state.looks.forEach((look,i)=>{
@@ -1048,7 +1159,7 @@ function renderLookCarousel(){
     <div class="look-sub">${look.kind==='simple'?'Le basique qui marche toujours':look.kind==='summer'?'Frais et décontracté':look.kind==='smart'?'Élégant au quotidien':'Audacieux et stylé'}</div>
     <div class="look-layout">
       <div class="look-parts">
-        ${parts.map(k=>`<div class="part"><span class="part-dot" style="background:${shadeHex(look[k].shade)}"></span><span>${look[k].piece}<br>${look[k].shade.toLowerCase()}</span></div>`).join('')}
+        ${parts.map(k=>`<div class="part"><span class="part-dot" style="background:${shadeHex(look[k].shade)}"></span><span>${lookLabelTwoLines(look[k])}</span></div>`).join('')}
       </div>
       <div class="mini-person">${figureHTML(look)}</div>
     </div>
@@ -1069,7 +1180,7 @@ function renderFeature(){
  order.forEach(([k,label],i)=>{
   if(!look[k])return;
   const d=document.createElement('div');d.className='feature-item';
-  d.innerHTML=`<div class="rank">${i+1}</div><div style="display:flex;align-items:center;gap:9px"><div class="sw" style="background:${shadeHex(look[k].shade)}"></div><div><strong>${look[k].piece} ${look[k].shade.toLowerCase()}</strong><small>${label}</small></div></div><div class="arrow">›</div>`;
+  d.innerHTML=`<div class="rank">${i+1}</div><div style="display:flex;align-items:center;gap:9px"><div class="sw" style="background:${shadeHex(look[k].shade)}"></div><div><strong>${withAgreement(look[k])}</strong><small>${label}</small></div></div><div class="arrow">›</div>`;
   if(k!=='accessory'){
     d.onclick=()=>{state.changeGroup=k;renderChange();$('replacements').scrollIntoView({behavior:'smooth',block:'center'})};
   }else{
@@ -1150,7 +1261,7 @@ function renderChange(){
    const b=document.createElement('button');
    const current=look[state.changeGroup]&&look[state.changeGroup].piece===it.piece&&look[state.changeGroup].shade===it.shade;
    b.className='rep'+(current?' selected':'');
-   b.innerHTML=`<div class="rep-preview" style="color:#111">${garmentIcon(it.icon)}<span style="position:absolute"></span></div><strong>${it.piece}</strong><small>${it.shade}</small>`;
+   b.innerHTML=`<div class="rep-preview" style="color:#111">${garmentIcon(it.icon)}<span style="position:absolute"></span></div><strong>${withAgreement(it)}</strong><small>Alternative</small>`;
    b.querySelector('.rep-preview').style.background=`linear-gradient(145deg,#fff,${shadeHex(it.shade)}22)`;
    b.onclick=()=>{
      look[state.changeGroup]={...it};
@@ -1202,7 +1313,7 @@ function openDrawer(mode){
   const a=JSON.parse(localStorage.getItem('stylia_saved')||'[]');
   $('drawerBody').innerHTML=a.length?a.map(x=>{
     const parts=['top','bottom','outer','shoes','accessory'].filter(k=>x.look[k]);
-    return `<div class="saved"><strong>${x.look.name}</strong><div class="saved-pills">${parts.map(k=>`<span class="saved-pill"><i style="background:${shadeHex(x.look[k].shade)}"></i>${x.look[k].piece} · ${x.look[k].shade}</span>`).join('')}</div></div>`;
+    return `<div class="saved"><strong>${x.look.name}</strong><div class="saved-pills">${parts.map(k=>`<span class="saved-pill"><i style="background:${shadeHex(x.look[k].shade)}"></i>${withAgreement(x.look[k])}</span>`).join('')}</div></div>`;
   }).join(''):'<div class="empty">Aucun look enregistré pour le moment.</div>';
  }
 }
