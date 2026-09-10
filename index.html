@@ -755,6 +755,14 @@ const styles=[
 {id:'contrast',label:'Contraste'}
 ];
 
+/* Préférence dressing : pour les bas, Stylia privilégie bleu, noir et blanc. */
+const bottomFamilyPriority=['Bleu','Noir','Blanc','Gris','Beige','Marron','Vert','Rouge','Jaune','Violet','Rose','Orange'];
+
+function preferredBottomShade(index=0){
+  const fam=bottomFamilyPriority[index] || bottomFamilyPriority[0];
+  return pick(fam,0);
+}
+
 const state={
  piece:null,family:null,shade:null,style:'auto',
  looks:[],activeLook:0,changeGroup:'top',ownedOnly:false
@@ -990,7 +998,7 @@ function makeLook(name,kind,why,mods={}){
  o[base.group]=base;
  const f0=mods.f0||fams[0],f1=mods.f1||fams[1]||fams[0],f2=mods.f2||fams[2]||fams[0];
  if(!o.top)o.top={group:'top',piece:mods.topPiece||'T-shirt',shade:mods.topShade||pick(f0),icon:mods.topIcon||'tshirt'};
- if(!o.bottom)o.bottom={group:'bottom',piece:mods.bottomPiece||'Pantalon / jean',shade:mods.bottomShade||pick(f1),icon:mods.bottomIcon||'pants'};
+ if(!o.bottom)o.bottom={group:'bottom',piece:mods.bottomPiece||'Pantalon / jean',shade:mods.bottomShade||preferredBottomShade(0),icon:mods.bottomIcon||'pants'};
  if(mods.outer!==false && !o.outer)o.outer={group:'outer',piece:mods.outerPiece||'Surchemise',shade:mods.outerShade||pick(f1),icon:'jacket'};
  if(!o.shoes)o.shoes={group:'shoes',piece:mods.shoePiece||'Baskets',shade:mods.shoeShade||'Blanc',icon:'shoes'};
  return applySeasonAndWeather(o);
@@ -1000,17 +1008,17 @@ function buildLooks(){
  if(state.shade==='Moutarde'){
   looks=[
    makeLook('Simple','simple','Le blanc éclaire le moutarde et le bleu marine crée le contraste principal.',{topShade:'Blanc',outerShade:'Bleu marine',bottomShade:'Bleu marine',shoeShade:'Blanc'}),
-   makeLook('Été','summer','Écru et bleu clair gardent l’ensemble léger, lumineux et facile à porter.',{topPiece:'Chemise',topIcon:'shirt',topShade:'Écru',outer:false,bottomShade:'Bleu ciel',shoeShade:'Blanc'}),
-   makeLook('Plus habillé','smart','Le bleu marine et le cognac donnent un rendu plus structuré sans étouffer le moutarde.',{topPiece:'Polo',topIcon:'polo',topShade:'Bleu marine',outer:false,bottomShade:'Moutarde',shoePiece:'Mocassins',shoeShade:'Cognac'}),
-   makeLook('Contraste','contrast','Le noir et le bordeaux donnent plus de caractère tout en gardant le short comme pièce forte.',{topShade:'Noir',outer:false,bottomShade:'Moutarde',shoeShade:'Blanc'})
+   makeLook('Été','summer','Écru et blanc gardent l’ensemble léger, lumineux et facile à porter.',{topPiece:'Chemise',topIcon:'shirt',topShade:'Écru',outer:false,bottomShade:'Blanc',shoeShade:'Blanc'}),
+   makeLook('Plus habillé','smart','Le bleu marine, le noir et le cognac donnent un rendu plus structuré.',{topPiece:'Polo',topIcon:'polo',topShade:'Bleu marine',outer:false,bottomShade:'Noir',shoePiece:'Mocassins',shoeShade:'Cognac'}),
+   makeLook('Contraste','contrast','Le noir donne plus de caractère tout en gardant le moutarde comme pièce forte.',{topShade:'Noir',outer:false,bottomShade:'Noir',shoeShade:'Blanc'})
   ];
  }else{
   const fams=basePalette();
   looks=[
-    makeLook('Simple','simple','Une base claire et une couleur secondaire nette gardent la tenue équilibrée.',{f0:fams[0],f1:fams[1],shoeShade:'Blanc'}),
-    makeLook('Été','summer','Des tons plus légers et peu de couches donnent un ensemble frais.',{topPiece:'Chemise',topIcon:'shirt',outer:false,f0:fams[0],f1:fams[2]||fams[1],shoeShade:'Blanc'}),
-    makeLook('Plus habillé','smart','Une pièce supérieure plus structurée et des teintes profondes rendent le look plus soigné.',{topPiece:'Polo',topIcon:'polo',outerPiece:'Veste',f0:fams[0],f1:fams[1],shoePiece:'Mocassins',shoeShade:'Cognac'}),
-    makeLook('Contraste','contrast','Une teinte plus franche crée un contraste lisible autour de ta pièce de départ.',{f0:fams[1]||fams[0],f1:fams[4]||'Noir',shoeShade:'Blanc'})
+    makeLook('Simple','simple','Une base claire et une couleur secondaire nette gardent la tenue équilibrée.',{f0:fams[0],bottomShade:'Bleu marine',shoeShade:'Blanc'}),
+    makeLook('Été','summer','Des tons plus légers et peu de couches donnent un ensemble frais.',{topPiece:'Chemise',topIcon:'shirt',outer:false,f0:fams[0],bottomShade:'Blanc',shoeShade:'Blanc'}),
+    makeLook('Plus habillé','smart','Une pièce supérieure plus structurée et des teintes profondes rendent le look plus soigné.',{topPiece:'Polo',topIcon:'polo',outerPiece:'Veste',f0:fams[0],bottomShade:'Noir',shoePiece:'Mocassins',shoeShade:'Cognac'}),
+    makeLook('Contraste','contrast','Une teinte plus franche crée un contraste lisible autour de ta pièce de départ.',{f0:fams[1]||fams[0],bottomShade:'Noir',shoeShade:'Blanc'})
   ];
  }
  const wanted={simple:'Simple',summer:'Été',smart:'Plus habillé',contrast:'Contraste'}[state.style];
@@ -1071,14 +1079,16 @@ function renderFeature(){
  });
 }
 function candidateItems(group){
- const fams=basePalette();
+ const fams=group==='bottom' ? bottomFamilyPriority : basePalette();
  let kinds=group==='top'?[['T-shirt','tshirt'],['Débardeur','tank'],['Chemise','shirt'],['Polo','polo']]
    :group==='bottom'?[['Pantalon / jean','pants'],['Short','shorts']]
    :group==='outer'?[['Surchemise','jacket'],['Veste','jacket'],['Blouson','jacket']]
    :[['Baskets','shoes'],['Mocassins','shoes'],['Sandales','shoes']];
  let arr=[];
  fams.slice(0,7).forEach((f,fi)=>{
-  const sh=pick(f);
+  const sh=group==='bottom'
+    ? (f==='Bleu' ? 'Bleu marine' : f==='Noir' ? 'Noir' : f==='Blanc' ? 'Blanc' : pick(f))
+    : pick(f);
   kinds.forEach(([piece,iconName],ki)=>{
     if(group==='shoes'&&!['Blanc','Beige','Marron','Noir','Bleu','Gris'].includes(f))return;
     arr.push({group,piece,shade:sh,icon:iconName,rank:fi*10+ki});
