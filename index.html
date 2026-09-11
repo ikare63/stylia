@@ -331,7 +331,7 @@ body{overflow-x:hidden}
 
 
 .mini-person{
-  height:318px;
+  height:326px;
   position:relative;
   display:flex;
   justify-content:center;
@@ -339,7 +339,7 @@ body{overflow-x:hidden}
   overflow:visible;
 }
 .figure{
-  width:108px;
+  width:114px;
   aspect-ratio:516 / 1523;
   position:relative;
   margin-top:0;
@@ -1108,6 +1108,7 @@ function figureHTML(look){
   function topSvg(){
     if(!look.top) return '';
 
+    // Débardeur : on laisse les bras plus découverts.
     if(topIcon==='tank'){
       return `
         <path class="cloth" fill="${topColor}" d="
@@ -1119,6 +1120,7 @@ function figureHTML(look){
       `;
     }
 
+    // Pull : manches longues.
     if(topIcon==='sweater'){
       return `
         <path class="cloth" fill="${topColor}" d="
@@ -1132,19 +1134,20 @@ function figureHTML(look){
       `;
     }
 
+    // Base manches courtes : elles tombent bien sur le haut du bras.
     const base = `
       <path class="cloth" fill="${topColor}" d="
-        M173 292 Q215 314 258 314 Q301 314 343 292
-        L394 318 Q421 334 436 369
-        L406 471 L368 451 L361 687
-        Q309 708 258 710 Q207 708 155 687
-        L148 451 L110 471 L80 369
-        Q95 334 122 318 Z"/>
+        M170 292 Q214 315 258 315 Q302 315 346 292
+        L392 316 Q420 332 434 368
+        L419 432 L395 525 L348 501 L361 688
+        Q309 709 258 711 Q207 709 155 688
+        L168 501 L121 525 L97 432 L82 368
+        Q96 332 124 316 Z"/>
     `;
 
     if(topIcon==='shirt'){
       return base + `
-        <path class="seam" d="M258 315 L258 688"/>
+        <path class="seam" d="M258 316 L258 688"/>
         <path class="seam" d="M218 305 L258 350 L298 305"/>
         <circle class="button" cx="258" cy="382" r="3.5"/>
         <circle class="button" cx="258" cy="438" r="3.5"/>
@@ -1202,11 +1205,19 @@ function figureHTML(look){
     if(look.bottom.piece==='Short'){
       return `
         <path class="cloth" fill="${bottomColor}" d="
-          M122 674 Q191 699 258 699 Q325 699 394 674
-          L405 793 Q365 814 306 805
-          L258 749 L210 805 Q151 814 111 793 Z"/>
-        <path class="seam" d="M258 699 L258 748"/>
-        <path class="seam" d="M126 700 Q258 731 390 700"/>
+          M118 674 Q191 701 258 701 Q325 701 398 674
+          L404 814
+          Q398 868 383 924
+          Q345 951 300 945
+          L258 836
+          L216 945
+          Q171 951 133 924
+          Q118 868 112 814 Z"/>
+        <path class="cloth" fill="${bottomColor}" d="
+          M132 703 Q190 724 258 724 Q326 724 384 703
+          L378 782 Q319 811 258 809 Q197 811 138 782 Z"/>
+        <path class="seam" d="M258 724 L258 835"/>
+        <path class="seam" d="M138 714 Q258 747 378 714"/>
       `;
     }
 
