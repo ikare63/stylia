@@ -363,10 +363,12 @@ body{overflow-x:hidden}
   z-index:3;
   overflow:visible;
   pointer-events:none;
+  transform:none;
+  transform-origin:center center;
 }
 .clothes-svg .cloth{
-  stroke:rgba(0,0,0,.20);
-  stroke-width:3;
+  stroke:rgba(0,0,0,.16);
+  stroke-width:3.4;
   stroke-linejoin:round;
   vector-effect:non-scaling-stroke;
 }
@@ -1108,21 +1110,35 @@ function figureHTML(look){
   function topSvg(){
     if(!look.top) return '';
 
-    // Débardeur : on laisse les bras plus découverts.
     if(topIcon==='tank'){
       return `
+        <!-- couverture légèrement plus large que le torse -->
+        <path fill="${topColor}" opacity=".98" d="
+          M188 278 Q218 298 258 301 Q298 298 328 278
+          L353 300 L344 390 L365 703
+          Q310 722 258 724 Q206 722 151 703
+          L172 390 L163 300 Z"/>
         <path class="cloth" fill="${topColor}" d="
           M196 286 Q219 303 258 305 Q297 303 320 286
           L343 304 Q338 349 329 386
-          L351 685 Q307 706 258 708 Q209 706 165 685
+          L351 695 Q307 713 258 715 Q209 713 165 695
           L187 386 Q178 349 173 304 Z"/>
         <path class="seam" d="M210 292 Q258 334 306 292"/>
       `;
     }
 
-    // Pull : manches longues.
     if(topIcon==='sweater'){
       return `
+        <!-- sous-couche de couverture -->
+        <path fill="${topColor}" opacity=".98" d="
+          M164 280 Q214 306 258 308 Q302 306 352 280
+          L407 307 Q439 327 454 368
+          L427 616 Q416 700 402 764
+          L337 752 L335 706
+          Q300 721 258 723 Q216 721 181 706
+          L179 752 L114 764
+          Q100 700 89 616 L62 368
+          Q77 327 109 307 Z"/>
         <path class="cloth" fill="${topColor}" d="
           M175 292 Q215 314 258 314 Q301 314 341 292
           L395 318 Q422 335 437 371
@@ -1134,26 +1150,38 @@ function figureHTML(look){
       `;
     }
 
-    // Base manches courtes : elles tombent bien sur le haut du bras.
+    // T-shirt / chemise / polo : manches plus larges et plus basses,
+    // corps légèrement plus long pour recouvrir entièrement le torse nu.
+    const coverage = `
+      <path fill="${topColor}" opacity=".98" d="
+        M158 279 Q211 307 258 309 Q305 307 358 279
+        L406 307 Q440 327 454 366
+        L434 447 L407 548 L349 519
+        L371 716 Q314 735 258 737 Q202 735 145 716
+        L167 519 L109 548 L82 447 L62 366
+        Q76 327 110 307 Z"/>
+    `;
     const base = `
+      ${coverage}
       <path class="cloth" fill="${topColor}" d="
         M170 292 Q214 315 258 315 Q302 315 346 292
         L392 316 Q420 332 434 368
-        L419 432 L395 525 L348 501 L361 688
-        Q309 709 258 711 Q207 709 155 688
+        L419 432 L395 525 L348 501 L363 701
+        Q310 720 258 722 Q206 720 153 701
         L168 501 L121 525 L97 432 L82 368
         Q96 332 124 316 Z"/>
     `;
 
     if(topIcon==='shirt'){
       return base + `
-        <path class="seam" d="M258 316 L258 688"/>
+        <path class="seam" d="M258 316 L258 701"/>
         <path class="seam" d="M218 305 L258 350 L298 305"/>
         <circle class="button" cx="258" cy="382" r="3.5"/>
         <circle class="button" cx="258" cy="438" r="3.5"/>
         <circle class="button" cx="258" cy="494" r="3.5"/>
         <circle class="button" cx="258" cy="550" r="3.5"/>
         <circle class="button" cx="258" cy="606" r="3.5"/>
+        <circle class="button" cx="258" cy="662" r="3.5"/>
       `;
     }
 
@@ -1171,7 +1199,31 @@ function figureHTML(look){
 
   function outerSvg(){
     if(!look.outer) return '';
+
     return `
+      <!-- grande sous-couche : la surchemise déborde volontairement du corps -->
+      <path fill="${outerColor}" opacity=".98" d="
+        M104 298 Q76 317 60 361
+        L39 493 L18 617 L5 741
+        L86 753 L128 624 L159 500 L173 396
+        L162 321 Z"/>
+      <path fill="${outerColor}" opacity=".98" d="
+        M412 298 Q440 317 456 361
+        L477 493 L498 617 L511 741
+        L430 753 L388 624 L357 500 L343 396
+        L354 321 Z"/>
+      <path fill="${outerColor}" opacity=".98" d="
+        M139 290 Q191 308 232 312 L249 349
+        L238 713 Q194 727 143 706
+        L136 438 L114 489 L85 472 L60 361
+        Q80 316 110 302 Z"/>
+      <path fill="${outerColor}" opacity=".98" d="
+        M377 290 Q325 308 284 312 L267 349
+        L278 713 Q322 727 373 706
+        L380 438 L402 489 L431 472 L456 361
+        Q436 316 406 302 Z"/>
+
+      <!-- couche visible avec coutures -->
       <path class="cloth" fill="${outerColor}" d="
         M124 316 Q96 331 82 369
         L64 489 L44 602 L29 719
@@ -1184,18 +1236,18 @@ function figureHTML(look){
         L365 338 Z"/>
       <path class="cloth" fill="${outerColor}" d="
         M151 305 Q194 318 229 320
-        L244 356 L231 690
-        Q193 701 157 682
+        L244 356 L233 704
+        Q191 718 153 698
         L151 430 L132 474 L105 457 L83 369
         Q100 332 124 319 Z"/>
       <path class="cloth" fill="${outerColor}" d="
         M365 305 Q322 318 287 320
-        L272 356 L285 690
-        Q323 701 359 682
+        L272 356 L283 704
+        Q325 718 363 698
         L365 430 L384 474 L411 457 L433 369
         Q416 332 392 319 Z"/>
-      <path class="seam" d="M229 320 L244 356 L231 690"/>
-      <path class="seam" d="M287 320 L272 356 L285 690"/>
+      <path class="seam" d="M229 320 L244 356 L233 704"/>
+      <path class="seam" d="M287 320 L272 356 L283 704"/>
     `;
   }
 
@@ -1204,6 +1256,16 @@ function figureHTML(look){
 
     if(look.bottom.piece==='Short'){
       return `
+        <!-- sous-couche : taille et cuisses légèrement plus larges -->
+        <path fill="${bottomColor}" opacity=".98" d="
+          M104 662 Q188 694 258 694 Q328 694 412 662
+          L421 822
+          Q414 887 394 949
+          Q345 971 291 960
+          L258 856
+          L225 960
+          Q171 971 122 949
+          Q102 887 95 822 Z"/>
         <path class="cloth" fill="${bottomColor}" d="
           M118 674 Q191 701 258 701 Q325 701 398 674
           L404 814
@@ -1222,14 +1284,27 @@ function figureHTML(look){
     }
 
     return `
+      <!-- sous-couche pantalon : plus large que les jambes et jusqu'aux chevilles -->
+      <path fill="${bottomColor}" opacity=".98" d="
+        M105 662 Q183 690 251 692
+        L252 846 L226 991 L209 1144 L196 1354
+        L128 1354 L117 1140 L101 986 L84 811 Z"/>
+      <path fill="${bottomColor}" opacity=".98" d="
+        M411 662 Q333 690 265 692
+        L264 846 L290 991 L307 1144 L320 1354
+        L388 1354 L399 1140 L415 986 L432 811 Z"/>
+      <path fill="${bottomColor}" opacity=".98" d="
+        M105 662 Q258 706 411 662
+        L393 795 Q326 836 258 833 Q190 836 123 795 Z"/>
+
       <path class="cloth" fill="${bottomColor}" d="
         M121 674 Q186 697 253 699
-        L253 842 L229 980 L213 1131 L201 1326
-        L143 1326 L132 1130 L118 982 L103 820 Z"/>
+        L253 842 L229 980 L213 1131 L201 1338
+        L143 1338 L132 1130 L118 982 L103 820 Z"/>
       <path class="cloth" fill="${bottomColor}" d="
         M395 674 Q330 697 263 699
-        L263 842 L287 980 L303 1131 L315 1326
-        L373 1326 L384 1130 L398 982 L413 820 Z"/>
+        L263 842 L287 980 L303 1131 L315 1338
+        L373 1338 L384 1130 L398 982 L413 820 Z"/>
       <path class="cloth" fill="${bottomColor}" d="
         M121 674 Q258 711 395 674
         L379 783 Q323 824 258 820 Q193 824 137 783 Z"/>
@@ -1241,6 +1316,18 @@ function figureHTML(look){
   function shoesSvg(){
     if(!look.shoes) return '';
     return `
+      <!-- sous-couche chaussures : couvre totalement les pieds -->
+      <path fill="${shoeColor}" opacity=".99" d="
+        M96 1353 Q132 1343 175 1355
+        L200 1419 Q190 1465 143 1482
+        L67 1478 Q43 1470 43 1445
+        Q49 1407 96 1353 Z"/>
+      <path fill="${shoeColor}" opacity=".99" d="
+        M420 1353 Q384 1343 341 1355
+        L316 1419 Q326 1465 373 1482
+        L449 1478 Q473 1470 473 1445
+        Q467 1407 420 1353 Z"/>
+
       <path class="cloth" fill="${shoeColor}" d="
         M111 1371 Q135 1362 167 1370
         L190 1419 Q181 1454 144 1467
