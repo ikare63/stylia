@@ -331,7 +331,7 @@ body{overflow-x:hidden}
   overflow:visible;
 }
 .figure{
-  width:114px;
+  width:118px;
   aspect-ratio:516 / 1523;
   position:relative;
   margin-top:0;
@@ -343,7 +343,7 @@ body{overflow-x:hidden}
   inset:0;
   width:100%;
   height:100%;
-  object-fit:fill;
+  object-fit:contain;
   z-index:1;
   pointer-events:none;
 }
@@ -412,6 +412,24 @@ body{overflow-x:hidden}
 .feature-kicker{font-size:10px;text-transform:uppercase;letter-spacing:.19em;font-weight:900;color:#777}
 .feature h3{font-size:32px;margin:4px 0 2px;letter-spacing:-1.2px}
 .feature p{font-size:12px;color:#666;line-height:1.45;margin:0}
+
+.feature-actions{display:grid;gap:10px;margin-top:16px}
+.validate-look-btn{
+  border:0;
+  border-radius:18px;
+  background:#111;
+  color:#fff;
+  font-weight:900;
+  font-size:16px;
+  padding:15px 18px;
+  box-shadow:0 10px 24px rgba(0,0,0,.12);
+}
+.validate-look-btn.validated{background:#1f7a49}
+.validation-hint{
+  font-size:12px;
+  color:#666;
+  line-height:1.4;
+}
 .feature-list{display:grid;gap:8px;margin-top:14px}
 .feature-item{
   display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;

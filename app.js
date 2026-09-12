@@ -129,7 +129,7 @@ const state={
 
 /* ---------- bus Stylia → 3615 ---------- */
 const STYLIA_SNAPSHOT_KEY='lenaic-stylia-snapshot-v1';
-let lastOutfitSignature='';
+let lastValidatedSignature='';
 function styliaLocalDateKey(date=new Date()){
  const d=new Date(date);
  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
@@ -153,17 +153,43 @@ function outfitPayload(look){
   weatherReady:Boolean(clermontWeather?.ready)
  };
 }
-function publishCurrentOutfit(){
- const look=state.looks[state.activeLook];
+function outfitSignature(payload){
+ const core={date:payload?.date||'',name:payload?.name||'',top:payload?.top||null,bottom:payload?.bottom||null,outer:payload?.outer||null,shoes:payload?.shoes||null,accessory:payload?.accessory||null};
+ return JSON.stringify(core);
+}
+function persistValidatedOutfit(look){
  const payload=outfitPayload(look);
- if(!payload)return;
- const signature=JSON.stringify({date:payload.date,name:payload.name,top:payload.top,bottom:payload.bottom,outer:payload.outer,shoes:payload.shoes,accessory:payload.accessory});
- if(signature===lastOutfitSignature)return;
- lastOutfitSignature=signature;
+ if(!payload)return null;
+ payload.status='validated';
+ payload.validatedAt=new Date().toISOString();
+ const signature=outfitSignature(payload);
+ lastValidatedSignature=signature;
  try{localStorage.setItem(STYLIA_SNAPSHOT_KEY,JSON.stringify(payload))}catch(e){}
  if(window.LenaicBus){
-  LenaicBus.publish('outfit.suggested',payload,{source:'stylia',target:'3615'});
+  LenaicBus.publish('outfit.validated',payload,{source:'stylia',target:'3615'});
  }
+ return payload;
+}
+function readValidatedOutfit(){
+ try{return JSON.parse(localStorage.getItem(STYLIA_SNAPSHOT_KEY)||'null')}catch(e){return null}
+}
+function currentLookIsValidated(){
+ const look=state.looks[state.activeLook];
+ const current=outfitPayload(look);
+ const saved=readValidatedOutfit();
+ if(!current||!saved)return false;
+ return outfitSignature(current)===outfitSignature(saved) && saved.date===styliaLocalDateKey();
+}
+function renderValidationState(){
+ const btn=$('validateLookBtn');
+ const hint=$('validationHint');
+ if(!btn||!hint)return;
+ const validated=currentLookIsValidated();
+ btn.classList.toggle('validated',validated);
+ btn.textContent=validated?'Tenue du jour validée pour 3615':'Valider cette tenue pour 3615';
+ hint.textContent=validated
+   ?'Cette tenue est bien celle envoyée au 3615 pour aujourd’hui.'
+   :'Choisis explicitement cette tenue pour qu’elle apparaisse sur l’accueil du 3615.';
 }
 
 /* Stylia utilise silencieusement la météo de Clermont-Ferrand pour choisir
@@ -519,10 +545,10 @@ function figureHTML(look){
     const base = `
       ${coverage}
       <path class="cloth" fill="${topColor}" d="
-        M170 292 Q214 315 258 315 Q302 315 346 292
+        M165 292 Q214 317 258 318 Q302 317 351 292
         L392 316 Q420 332 434 368
-        L419 432 L395 525 L348 501 L363 701
-        Q310 720 258 722 Q206 720 153 701
+        L419 432 L395 525 L348 501 L365 732
+        Q310 742 258 744 Q206 742 151 732
         L168 501 L121 525 L97 432 L82 368
         Q96 332 124 316 Z"/>
     `;
@@ -622,7 +648,7 @@ function figureHTML(look){
           Q171 971 122 949
           Q102 887 95 822 Z"/>
         <path class="cloth" fill="${bottomColor}" d="
-          M118 674 Q191 701 258 701 Q325 701 398 674
+          M114 650 Q191 688 258 688 Q325 688 402 650
           L404 814
           Q398 868 383 924
           Q345 951 300 945
@@ -631,7 +657,7 @@ function figureHTML(look){
           Q171 951 133 924
           Q118 868 112 814 Z"/>
         <path class="cloth" fill="${bottomColor}" d="
-          M132 703 Q190 724 258 724 Q326 724 384 703
+          M128 680 Q190 707 258 707 Q326 707 388 680
           L378 782 Q319 811 258 809 Q197 811 138 782 Z"/>
         <path class="seam" d="M258 724 L258 835"/>
         <path class="seam" d="M138 714 Q258 747 378 714"/>
@@ -641,27 +667,27 @@ function figureHTML(look){
     return `
       <!-- sous-couche pantalon : plus large que les jambes et jusqu'aux chevilles -->
       <path fill="${bottomColor}" opacity=".98" d="
-        M105 662 Q183 690 251 692
+        M101 640 Q183 675 251 678
         L252 846 L226 991 L209 1144 L196 1354
         L128 1354 L117 1140 L101 986 L84 811 Z"/>
       <path fill="${bottomColor}" opacity=".98" d="
-        M411 662 Q333 690 265 692
+        M415 640 Q333 675 265 678
         L264 846 L290 991 L307 1144 L320 1354
         L388 1354 L399 1140 L415 986 L432 811 Z"/>
       <path fill="${bottomColor}" opacity=".98" d="
-        M105 662 Q258 706 411 662
+        M101 640 Q258 695 415 640
         L393 795 Q326 836 258 833 Q190 836 123 795 Z"/>
 
       <path class="cloth" fill="${bottomColor}" d="
-        M121 674 Q186 697 253 699
+        M117 652 Q186 684 253 686
         L253 842 L229 980 L213 1131 L201 1338
         L143 1338 L132 1130 L118 982 L103 820 Z"/>
       <path class="cloth" fill="${bottomColor}" d="
-        M395 674 Q330 697 263 699
+        M399 652 Q330 684 263 686
         L263 842 L287 980 L303 1131 L315 1338
         L373 1338 L384 1130 L398 982 L413 820 Z"/>
       <path class="cloth" fill="${bottomColor}" d="
-        M121 674 Q258 711 395 674
+        M117 652 Q258 697 399 652
         L379 783 Q323 824 258 820 Q193 824 137 783 Z"/>
       <path class="seam" d="M258 699 L258 820"/>
       <path class="seam" d="M130 705 Q258 739 386 705"/>
@@ -843,7 +869,7 @@ function renderChange(){
  $('ownedOnlyBtn').textContent=`Mon dressing seulement : ${state.ownedOnly?'oui':'non'}`;
 }
 function renderResults(){
- renderLookCarousel();renderFeature();renderChange();publishCurrentOutfit();
+ renderLookCarousel();renderFeature();renderChange();renderValidationState();
 }
 async function showResults(){
  if(!state.piece||!state.family||!state.shade)return;
@@ -865,10 +891,16 @@ function saveCurrentLook(){
  const a=JSON.parse(localStorage.getItem('stylia_saved')||'[]');
  a.unshift({date:new Date().toISOString(),look});
  localStorage.setItem('stylia_saved',JSON.stringify(a.slice(0,30)));
- lastOutfitSignature='';publishCurrentOutfit();
- toast('Look enregistré · envoyé au 3615');
+ toast('Look enregistré dans les favoris');
 }
 $('saveCurrent').onclick=saveCurrentLook;
+$('validateLookBtn').onclick=()=>{
+ const look=state.looks[state.activeLook];
+ if(!look)return toast('Compose d’abord une tenue');
+ persistValidatedOutfit(look);
+ renderValidationState();
+ toast('Tenue validée · envoyée au 3615');
+};
 
 function openDrawer(mode){
  $('drawer').classList.add('show');
